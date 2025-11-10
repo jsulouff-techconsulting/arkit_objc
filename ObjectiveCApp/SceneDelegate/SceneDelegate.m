@@ -5,8 +5,13 @@
 //  Created by Joshua Sulouff on 10/29/25.
 //
 
+#import "PHASECTL.h"
+
 #import "SceneDelegate.h"
 #import "AppDelegate.h"
+
+#import "ListViewController.h"
+#import "ARView.h"
 
 @interface SceneDelegate ()
 
@@ -19,6 +24,19 @@
     // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
     // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+    printf("Entering SceneDelegate scene code\n");
+    UIWindow* window = [[UIWindow alloc] initWithWindowScene: (UIWindowScene*) scene];
+    
+    #if PHASE < 1
+        ListViewController* homeViewController = [[ListViewController alloc]init];
+    #else
+        ARView* homeViewController = [[ARView alloc] init];
+    #endif
+    
+    UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+    [window setRootViewController:nav];
+    [window makeKeyAndVisible];
+    self.window = window;
 }
 
 
