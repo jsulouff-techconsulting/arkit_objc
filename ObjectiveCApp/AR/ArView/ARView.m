@@ -4,9 +4,10 @@
 //
 //  Created by Joshua Sulouff on 11/10/25.
 //
-#import "ARView.h"
+
 #import <Foundation/Foundation.h>
 #import <ARKit/ARKit.h>
+#import "ARHeader.h"
 
 @implementation ARView
 
@@ -27,21 +28,26 @@
     [self checkMediaPerms];
     
     // Place 3D model so i can see what the fuck is wrong (camera or arkit)
-    SCNScene *scene = [SCNScene sceneNamed:@"cup.dae"];
+    SCNScene *scene = [SCNScene sceneNamed:@"visionTest.usdc"];
     SCNNode *modelNode = scene.rootNode.childNodes[0];
     [modelNode setScale:SCNVector3Make(0.1, 0.1, 0.1)]; // Scale the model
     ARAnchor *cupAnchor = [[ARAnchor alloc] initWithTransform:modelNode.simdTransform];
     
     self.arviewer.scene = scene;
     
-    self.arConf = [[ARWorldTrackingConfiguration alloc] init];
-    self.arConf.planeDetection = ARPlaneDetectionHorizontal;
+    ARWorldTrackingConfiguration* arConf = [[ARWorldTrackingConfiguration alloc] init];
+    arConf.planeDetection = ARPlaneDetectionHorizontal;
     
-    self.arSession = [[ARSession alloc] init];
-    [self.arSession addAnchor:cupAnchor];
-    [self.arSession runWithConfiguration:self.arConf];
+    ARSession* arSession = [[ARSession alloc] init];
+    [arSession addAnchor:cupAnchor];
+    [arSession runWithConfiguration:arConf];
+
+    self.arviewer.session = arSession;
     
-    self.arviewer.session = self.arSession;
+    self.gestureDelegate = [[ARGestureDelegate alloc] init];
+    self.gestureDelegate.arView = self;
+    
+    [self.gestureDelegate setupGestureRecognizer];
     
     [self.view addSubview:self.arviewer];
 }
