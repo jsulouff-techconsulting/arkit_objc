@@ -7,6 +7,8 @@
 
 #import "PHASECTL.h"
 
+#import "ObjectiveCApp-Swift.h"
+
 #import "SceneDelegate.h"
 #import "AppDelegate.h"
 
@@ -19,6 +21,7 @@
 
 @implementation SceneDelegate
 
+#define USE_SWIFTUI_ARVIEW true
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -27,11 +30,17 @@
     printf("Entering SceneDelegate scene code\n");
     UIWindow* window = [[UIWindow alloc] initWithWindowScene: (UIWindowScene*) scene];
     
-    #if PHASE < 1
-        ListViewController* homeViewController = [[ListViewController alloc]init];
-    #else
+    
+#if PHASE < 1
+    ListViewController* homeViewController = [[ListViewController alloc]init];
+#else
+    
+#if USE_SWIFTUI_ARVIEW
+        UIViewController* homeViewController = [[[SwiftArInterface alloc] init] mkSwiftArViewUi];
+#else
         ARView* homeViewController = [[ARView alloc] init];
-    #endif
+#endif
+#endif
     
     UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:homeViewController];
     [window setRootViewController:nav];
